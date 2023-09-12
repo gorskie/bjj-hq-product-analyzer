@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scraped Deals</title>
+</head>
+<body>
+    <h1>Scraped Deals</h1>
+    <ul>
+        {% for deal in deals %}
+            <li>
+                <h2>{{ deal[1] }}</h2>
+                <p>Price: {{ deal[2] }}</p>
+                <p>Description: {{ deal[3] }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
