@@ -21,7 +21,7 @@ def main():
     url = 'http://bjjhq.com'
 
     webscrape(url, db_name)  # Scrape data and insert into the database
-    app.run(debug=True)  # Start the Flask web application
+    app.run(debug=True, use_reloader=False)  # Start the Flask web application
 
 if __name__ == '__main__':
     main()
