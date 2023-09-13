@@ -1,28 +1,26 @@
 import sqlite3
-import requests
+from make_requests import make_request
+from database import insert_record
+from BJJHQProduct import BJJHQProduct
+from MockSoup import MockSoup
 from bs4 import BeautifulSoup
-def webscrape():
-    url = 'https://www.bjjhq.com/'
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    deal_titles = soup.find_all(class_='right')
+from datetime import datetime as dt
 
-    conn = sqlite3.connect('scraped_data.db')
+
+def webscrape(url, db_name):
+    """
+    Takes a url as a string and inserts a new deal from the page
+    """
+    response = make_request(url) # disable for testing
+    raw_soup = BeautifulSoup(response.text, 'html.parser')
+    # raw_soup = MockSoup().get_soup()
+    product = BJJHQProduct(raw_soup)
+
+    conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
 
-    for item in deal_titles:
-        h1_element = item.find('h1')
-        price_element = item.find('div', class_='buydiv inactive')
-        description = item.find('div', class_='desclist')
-
-        if h1_element is not None and description is not None and price_element is not None:
-            title = h1_element.text.strip()
-            price = price_element.text.strip()
-            desc = description.text.strip()
-
-            # Insert the data into the database
-            cursor.execute('INSERT INTO deals (title, price, description) VALUES (?, ?, ?)',
-                           (title, price, desc))
+    # if title is not None and price is not None and desc is not None: # TODO: add handling to prevent None sfrom ever loading in the class
+    insert_record(cursor, product)
 
     conn.commit()
     conn.close()

@@ -1,6 +1,8 @@
 import argparse
+import sqlite3
 from webscrape import webscrape
 from database import create_database
+from datetime import datetime as dt
 from webapp import app
 
 def main():
@@ -8,11 +10,17 @@ def main():
     parser.add_argument('--wipe', action='store_true', help='Wipe the database before launching the application')
     args = parser.parse_args()
 
-    if args.wipe:
-        create_database()  # Wipe the database by recreating it
-        print("Database wiped.")
+    db_name = 'scraped_data.db' # pull this out later
 
-    webscrape()  # Scrape data and insert into the database
+    mode = 'w' if args.wipe else 'r'
+    create_database(db_name, mode)
+    
+    conn = sqlite3.connect(db_name)
+    cursor = conn.cursor()
+
+    url = 'http://bjjhq.com'
+
+    webscrape(url, db_name)  # Scrape data and insert into the database
     app.run(debug=True)  # Start the Flask web application
 
 if __name__ == '__main__':
