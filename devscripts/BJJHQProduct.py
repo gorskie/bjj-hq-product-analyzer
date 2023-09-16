@@ -1,3 +1,6 @@
+from datetime import datetime as dt
+from devscripts.format_datetime import format_datetime
+# TODO: Add the sale_date to the product class from the site data, if possible
 class BJJHQProduct():
     
     def __init__(self, site_soup):
@@ -16,6 +19,7 @@ class BJJHQProduct():
         self.product_name = self.extract_product_name()
         self.price = self.extract_price()
         self.desc = self.extract_desc()
+        self.product_date = self.extract_product_date()
 
 
     def extract_product_name(self):
@@ -23,13 +27,18 @@ class BJJHQProduct():
     
 
     def extract_price(self):
-        return str([elem.text for elem in self.data.find_all('em') if elem.text.strip()[0] == '$'][0])
+        return str([elem.text for elem in self.data.find_all('em') if elem.text.strip()[0] == '$'][0]).strip('$')
     
 
     def extract_desc(self):
         return str(self.data.find('div', class_="desclist").find('p').text.strip())
 
+
+    # TODO: this is a placeholder. this will work for now but need to extract this from the site data
+    def extract_product_date(self):
+        return dt.date(dt.today())
     
+
     def get_product_name(self):
         return self.product_name
 
@@ -40,3 +49,7 @@ class BJJHQProduct():
 
     def get_desc(self):
         return self.desc
+    
+
+    def get_product_date(self):
+        return self.product_date

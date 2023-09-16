@@ -1,8 +1,8 @@
 import sqlite3
 from make_requests import make_request
-from database import insert_record
+from devscripts.sqlite3_db_cmds import insert_record
 from BJJHQProduct import BJJHQProduct
-from MockSoup import MockSoup
+# from MockSoup import MockSoup
 from bs4 import BeautifulSoup
 from datetime import datetime as dt
 
@@ -18,9 +18,9 @@ def webscrape(url, db_name):
 
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
-
+    table = 'deals'
     # if title is not None and price is not None and desc is not None: # TODO: add handling to prevent None sfrom ever loading in the class
-    insert_record(cursor, product)
+    insert_record(cursor, table, product)
 
     conn.commit()
     conn.close()
